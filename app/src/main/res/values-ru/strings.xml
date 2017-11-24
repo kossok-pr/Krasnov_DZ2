@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Краснов_ДЗ2</string>
+    <string name="hint_name">Введите имя</string>
+    <string name="take_photo_btn">сделать снимок</string>
+    <string name="enter_name_toast">Введите имя</string>
+</resources>
