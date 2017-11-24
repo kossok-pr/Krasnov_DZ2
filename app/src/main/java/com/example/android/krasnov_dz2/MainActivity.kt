@@ -1,16 +1,16 @@
 package com.example.android.krasnov_dz2
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.support.v7.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.support.v4.content.FileProvider
+import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import java.io.File
 import java.text.SimpleDateFormat
@@ -22,9 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     val REQUEST_IMAGE_CAPTURE = 1
 
-    //lateinit var photoPath: String
-
-    //lateinit var photoImageView: ImageView
+    lateinit var photoPath: Uri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,29 +40,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun takePhoto() {
-        var intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
+        var takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (takePictureIntent.resolveActivity(packageManager) != null) {
+            var photoFile = createImageFile()
+            photoPath = FileProvider.getUriForFile(applicationContext, "com.example.android.fileprovider", photoFile)
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoPath)
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            var extras: Bundle = data.extras
-            //var imageBitmap: Bitmap = extras.get("data") as Bitmap
-            //photoImageView.setImageBitmap(imageBitmap)
             var intent = Intent(applicationContext, ResultActivity::class.java)
-            intent.putExtras(extras)
+            intent.putExtra("uri", photoPath.toString())
+            intent.putExtra(Intent.EXTRA_TEXT, name.toString())
             startActivity(intent)
         }
     }
 
-    /*fun createImageFile(): File {
+    fun createImageFile(): File {
         var timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         var imageFileName = "JPEG_" + timeStamp + "_"
         var storageDir: File = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         var image: File = File.createTempFile(imageFileName, ".jpg", storageDir)
-        photoPath = image.absolutePath
         return image
-    }*/
+    }
 }

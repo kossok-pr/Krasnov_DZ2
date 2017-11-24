@@ -1,9 +1,11 @@
 package com.example.android.krasnov_dz2
 
-import android.graphics.Bitmap
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.widget.ImageView
+import android.widget.TextView
 
 class ResultActivity : AppCompatActivity() {
 
@@ -12,8 +14,9 @@ class ResultActivity : AppCompatActivity() {
         setContentView(R.layout.activity_result)
 
         var photoView: ImageView = findViewById(R.id.photo_image_view)
-        var extras: Bundle = intent.extras
-        var imageBitmap: Bitmap = extras.get("data") as Bitmap
-        photoView.setImageBitmap(imageBitmap)
+        photoView.setImageURI(Uri.parse(intent.getStringExtra("uri")))
+
+        var textView: TextView = findViewById(R.id.name_text_view)
+        textView.text = intent.getStringExtra(Intent.EXTRA_TEXT)
     }
 }
